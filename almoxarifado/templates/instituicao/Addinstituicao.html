@@ -1,0 +1,164 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <h1 class="mb-4">Adicionar Instituição</h1>
+
+      <div class="card">
+        <div class="card-body">
+          <!-- Mensagens de erro e sucesso -->
+          {% if error %}
+          <div
+            class="alert alert-danger alert-dismissible fade show"
+            role="alert"
+          >
+            <strong>Erro!</strong> {{ error }}
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="alert"
+              aria-label="Close"
+            ></button>
+          </div>
+          {% endif %} {% if messages %} {% for message in messages %}
+          <div
+            class="alert alert-{{ message.tags }} alert-dismissible fade show"
+            role="alert"
+          >
+            {{ message }}
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="alert"
+              aria-label="Close"
+            ></button>
+          </div>
+          {% endfor %} {% endif %}
+
+          <form
+            method="POST"
+            action="{% url 'add_instituicao' %}"
+            id="formInstituicao"
+          >
+            {% csrf_token %}
+            <div class="mb-3">
+              <label for="nome" class="form-label">Nome</label>
+              <input
+                type="text"
+                id="nome"
+                name="nome"
+                class="form-control"
+                value="{{ form_data.nome|default:'' }}"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="cep" class="form-label">CEP</label>
+              <input
+                type="text"
+                id="cep"
+                name="cep"
+                class="form-control"
+                value="{{ form_data.cep|default:'' }}"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="logradouro" class="form-label">Logradouro</label>
+              <input
+                type="text"
+                id="logradouro"
+                name="logradouro"
+                class="form-control"
+                value="{{ form_data.logradouro|default:'' }}"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="numero" class="form-label">Número</label>
+              <input
+                type="text"
+                id="numero"
+                name="numero"
+                class="form-control"
+                value="{{ form_data.numero|default:'' }}"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="bairro" class="form-label">Bairro</label>
+              <input
+                type="text"
+                id="bairro"
+                name="bairro"
+                class="form-control"
+                value="{{ form_data.bairro|default:'' }}"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="cidade" class="form-label">Cidade</label>
+              <input
+                type="text"
+                id="cidade"
+                name="cidade"
+                class="form-control"
+                value="{{ form_data.cidade|default:'' }}"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="estado" class="form-label">Estado</label>
+              <input
+                type="text"
+                id="estado"
+                name="estado"
+                class="form-control"
+                value="{{ form_data.estado|default:'' }}"
+                maxlength="2"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="telefone" class="form-label">Telefone</label>
+              <input
+                type="tel"
+                id="telefone"
+                name="telefone"
+                class="form-control"
+                value="{{ form_data.telefone|default:'' }}"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="cnpj" class="form-label">CNPJ</label>
+              <input
+                type="text"
+                id="cnpj"
+                name="cnpj"
+                class="form-control"
+                value="{{ form_data.cnpj|default:'' }}"
+                required
+              />
+            </div>
+            <div class="row">
+              <div class="col-12">
+                <button type="submit" class="btn btn-primary me-2">
+                  Adicionar Instituição
+                </button>
+                <a
+                  href="{% url 'lista_instituicao' %}"
+                  class="btn btn-secondary"
+                >
+                  Cancelar
+                </a>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

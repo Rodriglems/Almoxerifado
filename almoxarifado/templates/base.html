@@ -6,11 +6,7 @@
     <title>SYSEBTT</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <link
-      rel="shortcut icon"
-      href="#"
-      type="image/x-icon"
-    />
+    <link rel="shortcut icon" href="#" type="image/x-icon" />
 
     {% csrf_token %}
     <link
@@ -38,15 +34,12 @@
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
-    <script src="{% static 'js/application.js' %}"></script>
   </head>
   <body>
     <div class="wrapper">
       <!-- Sidebar  -->
       <nav id="sidebar">
-        <a href="#">
-          
-        </a>
+        <a href="#"> </a>
         <ul class="list-unstyled components" class="menulink">
           <li>
             <a href="#" class="menulink"
@@ -54,21 +47,21 @@
             >
           </li>
           <li>
-            <a href="#" class="menulink"><i class="fa fa-building fa-fw"></i> Instituição </a>
+            <a href="{% url 'lista_instituicao' %}" class="menulink"
+              ><i class="fa fa-building fa-fw"></i> Instituição
+            </a>
           </li>
           <li>
-            <a href="#" class="menulink"
+            <a href="{% url 'lista_funcionario' %}" class="menulink"
               ><i class="fa fa-people-carry fa-fw"></i> Funcionários</a
             >
           </li>
-            
+
           <!-- Adicione mais links conforme necessário -->
         </ul>
         <ul class="list-unstyled sairmenubtn color-principal-escura">
           <li>
-            
-              {% csrf_token %}
-            </form>
+            <!-- Logout link removido temporariamente - adicione quando necessário -->
           </li>
         </ul>
       </nav>
@@ -94,7 +87,7 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
               <ul class="nav navbar-nav ml-auto">
                 <li class="nav-item">
-                 <!--  <a class="nav-link" href="#"
+                  <!--  <a class="nav-link" href="#"
                     >{{ request.user.get_full_name|default:request.user.username
                     }}</a
                   > -->
