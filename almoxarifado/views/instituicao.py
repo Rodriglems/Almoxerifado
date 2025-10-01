@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db.models import Q
 
-
+@login_required
 def lista_instituicao(request):
  
     q = request.GET.get('q', '').strip()
@@ -21,7 +21,7 @@ def lista_instituicao(request):
     page_obj = paginator.get_page(page_number)
     return render(request, 'instituicao/lista.html', {'instituicoes': page_obj, 'page_obj': page_obj})
      
-
+@login_required
 def add_instituicao(request):
     if request.method == "POST":
         nome = request.POST.get("nome", "").strip()

@@ -16,6 +16,9 @@ __all__ = [
     'editar_funcionario',
     'excluir_funcionario',
     'pdf_funcionario',
+    'cadastrar_usuario',
+    'login_view',
+    'logout_view',
     
 ]
 
@@ -26,7 +29,7 @@ from .instituicao import (
     excluir_instituicao,
     pdf_instituicao,
 )
-from ..funcionario import login_view, logout_view
+from ..login import login_view, logout_view
 
 # Expose all public view names from the package
 __all__ = [

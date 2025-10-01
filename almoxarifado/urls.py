@@ -22,6 +22,8 @@ urlpatterns = [
     path('editar-instituicao/<int:pk>/', views.editar_instituicao, name='editar-instituicao'),
 
 # tela de login
-     path('login/', views.login_view, name='login'),
+    path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
+
+ 
 ]

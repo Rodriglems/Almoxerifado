@@ -8,17 +8,21 @@ from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.db import IntegrityError, transaction
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import never_cache
 from django.core.paginator import Paginator
 from django.db.models import Q
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import UserCreationForm
 
 
 
 @login_required
 def lista_funcionario(request):
     q = request.GET.get('q', '').strip()
-    funcionarios = Funcionario.objects.all()
+    # ordenar por nome para garantir resultados consistentes ao paginar
+    funcionarios = Funcionario.objects.all().order_by('nome')
     if q:
-        funcionarios = funcionarios.filter(Q(nome__icontains=q))
+        funcionarios = funcionarios.filter(Q(nome__icontains=q)).order_by('nome')
 
     paginator = Paginator(funcionarios, 10)  # 10 funcionários por página
     page_number = request.GET.get('page')
@@ -58,7 +62,6 @@ def add_funcionario(request):
 
 @login_required
 def inicio_projeto(request):
-    """Renderiza o template de boas-vindas localizado em 'funcionario/inicio.html'."""
     return render(request, 'funcionario/inicio.html')
 
 @login_required
@@ -120,9 +123,7 @@ def editar_funcionario(request, pk):
         except Exception as e:
             return render(request, 'funcionario/Addfuncionario.html', {'error': str(e), 'val': request.POST, 'instituicoes': Instituicao.objects.all()})
 
-    # GET
     return render(request, 'funcionario/Addfuncionario.html', {'instituicoes': Instituicao.objects.all()})
-# ...existing code...
 
 @login_required
 def excluir_funcionario(request, pk):
@@ -145,8 +146,3 @@ def pdf_funcionario(request):
     if pisa_status.err:
         return HttpResponse('Erro ao gerar o PDF', status=500)
     return response
-
-
-
- 
-
