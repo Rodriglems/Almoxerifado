@@ -2,25 +2,36 @@
 <h1>Almoxerifado</h1>
 <div>
   <div>
-    <div
-      class="d-flex align-items-center mb-3"
-      style="justify-content: space-between"
-    >
+    <form method="get">
+  <div class="row mb-4">
+    <div class="col-md-6 mb-2">
       <input
         type="text"
-        placeholder="Pesquisar Instituição"
-        class="form-control w-50"
+        name="q"
+        class="form-control"
+        placeholder="Pesquisar por Instituição"
+        value="{{ request.GET.q }}"
       />
-      <a href="{% url 'add_instituicao' %}" class="btn btn-primary right-5"
-        >Adicionar Instituição</a
-      >
+    </div>
+    <div class="col-lg-2 mb-3">
+      <button type="submit" class="btn btn-primary colorprimarybtn">
+        Pesquisar
+      </button>
+    </div>
+    <div class="col-lg-3 mb-3">
       <a
-        href="{% url 'pdf_instituicao' %}?download=pdf"
-        id="exportPdfBtn"
-        class="btn btn-secondary"
-        >Exportar PDF</a
+        href="{% url 'add_instituicao' %}"
+        class="btn btn-primary colorprimarybtn"
+        >Cadastrar Nova Instituição</a
       >
     </div>
+    <div class="col-lg-2 mb-2">
+      <a href="{% url 'pdf_instituicao' %}" class="btn btn-primary colorprimarybtn"
+        >Baixar PDF</a
+      >
+    </div>
+  </div>
+</form>
     <div>
       <table class="table table-striped">
         <thead>
@@ -50,12 +61,12 @@
             <td>
               <a
                 href="{% url 'editar-instituicao' instituicao.pk %}"
-                class="btn btn-sm"
+               class="btn btn-sm btn-warning"
                 >Editar</a
               >
               <a
                 href="{% url 'excluir-instituicao' instituicao.pk %}"
-                class="btn btn-sm"
+                class="btn btn-sm btn-danger"
                 >Excluir</a
               >
             </td>

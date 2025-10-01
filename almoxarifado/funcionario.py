@@ -1,8 +1,9 @@
-from ..models import Funcionario, Instituicao
+from almoxarifado.models import Funcionario, Instituicao
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 from xhtml2pdf import pisa
+from django.contrib.auth import authenticate, login, logout
 
 
 def lista_funcionario(request):
@@ -53,3 +54,26 @@ def pdf_instituicao(request):
         return HttpResponse("Erro ao gerar PDF", status=500)
     return response
     
+    
+def login_view(request):
+    """
+    Autentica usuário padrão Django (username/senha).
+    """
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('inicio')
+        else:
+            return render(request, 'login.html', {'erro': 'Usuário ou senha inválidos'})
+    return render(request, 'login.html')
+
+# Logout
+def logout_view(request):
+    """
+    Realiza logout do usuário padrão Django.
+    """
+    logout(request)
+    return redirect('login')
