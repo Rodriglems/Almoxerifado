@@ -13,6 +13,9 @@ class Instituicao(models.Model):
     telefone = models.CharField(max_length=20)
     cnpj = models.CharField(max_length=18, unique=True)
     
+    def __str__(self):
+        return self.nome
+    
 class Funcionario(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     nome = models.CharField(max_length=100)
@@ -20,3 +23,6 @@ class Funcionario(models.Model):
     email = models.EmailField(unique=True)
     telefone = models.CharField(max_length=20)
     instituicao = models.ForeignKey(Instituicao, on_delete=models.CASCADE)
+
+    def __str__(self):
+         return self.nome

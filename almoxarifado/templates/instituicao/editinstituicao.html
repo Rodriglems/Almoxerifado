@@ -1,0 +1,117 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<div class="container">
+  <h1>Editar Instituição</h1>
+  {% if error %}
+  <div class="alert alert-danger">{{ error }}</div>
+  {% endif %} {% if erros %}
+  <div class="alert alert-danger">
+    <ul>
+      {% for campo, msg in erros.items %}
+      <li>{{ msg }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  <form method="post" action="{% url 'editar-instituicao' instituicao.pk %}">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label for="nome" class="form-label">Nome</label>
+      <input
+        type="text"
+        id="nome"
+        name="nome"
+        class="form-control"
+        value="{{ val.nome|default:instituicao.nome }}"
+        required
+      />
+    </div>
+    <div class="mb-3">
+      <label for="cep" class="form-label">CEP</label>
+      <input
+        type="text"
+        id="cep"
+        name="cep"
+        class="form-control"
+        value="{{ val.cep|default:instituicao.cep }}"
+      />
+    </div>
+    <div class="mb-3">
+      <label for="logradouro" class="form-label">Logradouro</label>
+      <input
+        type="text"
+        id="logradouro"
+        name="logradouro"
+        class="form-control"
+        value="{{ val.logradouro|default:instituicao.logradouro }}"
+      />
+    </div>
+    <div class="mb-3">
+      <label for="numero" class="form-label">Número</label>
+      <input
+        type="text"
+        id="numero"
+        name="numero"
+        class="form-control"
+        value="{{ val.numero|default:instituicao.numero }}"
+      />
+    </div>
+    <div class="mb-3">
+      <label for="bairro" class="form-label">Bairro</label>
+      <input
+        type="text"
+        id="bairro"
+        name="bairro"
+        class="form-control"
+        value="{{ val.bairro|default:instituicao.bairro }}"
+      />
+    </div>
+    <div class="mb-3">
+      <label for="cidade" class="form-label">Cidade</label>
+      <input
+        type="text"
+        id="cidade"
+        name="cidade"
+        class="form-control"
+        value="{{ val.cidade|default:instituicao.cidade }}"
+      />
+    </div>
+    <div class="mb-3">
+      <label for="estado" class="form-label">Estado</label>
+      <input
+        type="text"
+        id="estado"
+        name="estado"
+        class="form-control"
+        value="{{ val.estado|default:instituicao.estado }}"
+        maxlength="2"
+      />
+    </div>
+    <div class="mb-3">
+      <label for="telefone" class="form-label">Telefone</label>
+      <input
+        type="text"
+        id="telefone"
+        name="telefone"
+        class="form-control"
+        value="{{ val.telefone|default:instituicao.telefone }}"
+      />
+    </div>
+    <div class="mb-3">
+      <label for="cnpj" class="form-label">CNPJ</label>
+      <input
+        type="text"
+        id="cnpj"
+        name="cnpj"
+        class="form-control"
+        value="{{ val.cnpj|default:instituicao.cnpj }}"
+        required
+      />
+    </div>
+    <button type="submit" class="btn btn-primary">Salvar</button>
+    <a href="{% url 'lista_instituicao' %}" class="btn btn-secondary"
+      >Cancelar</a
+    >
+  </form>
+</div>
+{% endblock content %}

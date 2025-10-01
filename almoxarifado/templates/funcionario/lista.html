@@ -3,12 +3,11 @@
     <h1>Almoxerifado</h1>
     <div>
         <div>
-          <div>
-            <input type="text" placeholder="Pesquisar Funcionário" class="form-control">
-          <a href="{% url 'add_funcionario' %}" class="btn btn-primary">Adicionar Funcionário</a>
+          <div class="d-flex align-items-center mb-3" style="justify-content: space-between">
+            <input type="text" placeholder="Pesquisar Funcionário" class="form-control w-50">
+            <a href="{% url 'add_funcionario' %}" class="btn btn-primary">Adicionar Funcionário</a>
           </div>
           <div>
-            <form action="" class="form">
               <table class="table table-striped">
                 <thead >
                   <tr>
@@ -33,7 +32,7 @@
                       <a href="#" class="btn btn-sm btn-danger">Excluir</a>
                     </td>
                   </tr>
-                  {% empty %}
+                  {% empty %} <!-- Isso é caso nenhum funcionario for encontrado -->
                   <tr>
                     <td colspan="6" class="text-center">
                       Nenhum funcionário cadastrado
@@ -42,7 +41,6 @@
                   {% endfor %}
                 </tbody>
               </table>
-            </form>
           </div>
         </div>
     </div>

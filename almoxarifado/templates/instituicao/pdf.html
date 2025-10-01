@@ -1,0 +1,93 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Lista de Alunos</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        font-size: 12px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        table-layout: fixed;
+      }
+      th,
+      td {
+        border: 1px solid #ccc;
+        padding: 6px;
+        text-align: left;
+        /* ensure long strings (like CNPJ) wrap and don't break the table */
+        word-break: break-word;
+        overflow-wrap: anywhere;
+        white-space: normal;
+      }
+      th {
+        background: #f4f4f4;
+      }
+      h2 {
+        color: #007bff;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Lista das Instituições</h2>
+    {% if warning %}
+    <div
+      style="
+        color: #856404;
+        background: #fff3cd;
+        padding: 8px;
+        border-radius: 4px;
+      "
+    >
+      Aviso: {{ warning }}
+    </div>
+    {% endif %}
+    <table>
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>CEP</th>
+          <th>Logradouro</th>
+          <th>Número</th>
+          <th>Bairro</th>
+          <th>Estado</th>
+          <th>Telefone</th>
+          <th>CNPJ</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for instituicao in instituicoes %}
+        <tr>
+          <td style="max-width: 160px">{{ instituicao.nome }}</td>
+          <td style="max-width: 90px">{{ instituicao.cep }}</td>
+          <td style="max-width: 160px">{{ instituicao.logradouro }}</td>
+          <td style="max-width: 60px">{{ instituicao.numero }}</td>
+          <td style="max-width: 120px">{{ instituicao.bairro }}</td>
+          <td style="max-width: 80px">{{ instituicao.estado }}</td>
+          <td style="max-width: 110px">{{ instituicao.telefone }}</td>
+          <td
+            style="
+              max-width: 140px;
+              word-break: break-all;
+              overflow-wrap: anywhere;
+            "
+          >
+            {{ instituicao.cnpj }}
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="9" style="text-align: center">
+            Nenhuma instituição cadastrada
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </body>
+</html>

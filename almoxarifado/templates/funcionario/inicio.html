@@ -1,0 +1,30 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container-fluid">
+  <div class="row text-center main-footer" id="footer">
+    <div class="footer-title"></div>
+  </div>
+  <br />
+  <div class="row text-center">
+    <div class="col-sm-6 col-md-5 col-lg-4 menucard">
+      <a href="{% url 'lista_funcionario' %}" class="menucardicones">
+        <div class="card menuprincipal">
+          <i class="fa fa-file-alt fa-3x menuicone"></i>
+          <div class="card-body">
+            <h6 class="card-title">Funcionarios</h6>
+          </div>
+        </div>
+      </a>
+    </div>
+    <div class="col-sm-6 col-md-5 col-lg-4 menucard">
+      <a href="{% url 'lista_instituicao' %}" class="menucardicones">
+        <div class="card menuprincipal">
+          <i class="fa fa-cog fa-3x menuicone"></i>
+          <div class="card-body">
+            <h6 class="card-title">Instituições</h6>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

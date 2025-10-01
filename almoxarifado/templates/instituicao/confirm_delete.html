@@ -1,0 +1,16 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<div class="container">
+  <h1>Confirmar exclusão</h1>
+  <p>
+    Tem certeza que deseja excluir a instituição:
+    <strong>{{ instituicao.nome }}</strong> ?
+  </p>
+  <form method="post" action="{% url 'excluir-instituicao' instituicao.pk %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Excluir</button>
+    <a href="{% url 'lista_instituicao' %}" class="btn btn-secondary"
+      >Cancelar</a
+    >
+  </form>
+</div>
+{% endblock content %}
