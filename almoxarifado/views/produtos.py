@@ -3,6 +3,10 @@ from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from almoxarifado.models import Produto, CategoriaProduto
 from django.contrib import messages
+from django.http import HttpResponse
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+from django.contrib.auth.decorators import login_required
 
 
 
@@ -86,3 +90,18 @@ def editar_produto(request, pk):
     
     categorias = CategoriaProduto.objects.all()
     return render(request, 'produtos/editar.html', {'produto': produto, 'categorias': categorias})
+
+
+@login_required
+def pdf_produtos(request):
+    produtos = Produto.objects.all()
+    template_path = 'produtos/pdf.html'
+    context = {'produtos': produtos}
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="produtos.pdf"'
+    template = get_template(template_path)
+    html = template.render(context)
+    pisa_status = pisa.CreatePDF(html, dest=response)
+    if pisa_status.err:
+        return HttpResponse('Erro ao gerar o PDF', status=500)
+    return response
