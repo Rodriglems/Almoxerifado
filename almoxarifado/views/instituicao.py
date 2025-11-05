@@ -7,6 +7,9 @@ from django.db import IntegrityError
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db.models import Q
+from xhtml2pdf import pisa  
+from django.template.loader import get_template
+
 
 @login_required
 def lista_instituicao(request):
@@ -66,26 +69,18 @@ def add_instituicao(request):
         return redirect('lista_instituicao')
     return render(request, 'instituicao/Addinstituicao.html')
 
-
 def pdf_instituicao(request):
     instituicoes = Instituicao.objects.all()
-    # se estiver pedindo download em PDF, tente usar xhtml2pdf; caso contrário renderiza o HTML
-    if request.GET.get('download') == 'pdf':
-        try:
-            from xhtml2pdf import pisa
-            html = render_to_string('instituicao/pdf.html', {'instituicoes': instituicoes})
-            response = HttpResponse(content_type='application/pdf')
-            response['Content-Disposition'] = 'attachment; filename="instituicoes.pdf"'
-            pisa_status = pisa.CreatePDF(html, dest=response)
-            if pisa_status.err:
-                logging.exception('Erro ao gerar PDF com xhtml2pdf')
-                return HttpResponse('Erro ao gerar PDF', status=500)
-            return response
-        except Exception as e:
-            logging.exception('Não foi possível gerar PDF, retornando HTML')
-            return render(request, 'instituicao/pdf.html', {'instituicoes': instituicoes, 'warning': str(e)})
-
-    return render(request, 'instituicao/pdf.html', {'instituicoes': instituicoes})
+    template_path = 'instituicao/pdf.html'
+    context = {'instituicoes': instituicoes}
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="instituicoes.pdf"'
+    template = get_template(template_path)
+    html = template.render(context)
+    pisa_status = pisa.CreatePDF(html, dest=response)
+    if pisa_status.err:
+        return HttpResponse('Erro ao gerar o PDF', status=500)
+    return response
 
 
 def excluir_instituicao(request, pk):
@@ -100,7 +95,7 @@ def excluir_instituicao(request, pk):
 def editar_instituicao(request, pk):
     instituicao = get_object_or_404(Instituicao, pk=pk)
     if request.method == 'POST':
-        nome = request.POST.get('nome', '').strip()
+        nome = request.POST.get('nome', '').strip() #remove os espaço atrás e na frente
         cep = request.POST.get('cep', '').strip()
         logradouro = request.POST.get('logradouro', '').strip()
         numero = request.POST.get('numero', '').strip()

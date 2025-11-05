@@ -3,7 +3,7 @@
 <html lang="pt-br">
   <head>
     <meta charset="UTF-8" />
-    <title>SYSEBTT</title>
+    <title>Almoxerifado</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <link rel="shortcut icon" href="#" type="image/x-icon" />
@@ -36,14 +36,17 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
   </head>
   <body>
+   <div style="background-color: aliceblue; padding: 10px; text-align: center;"> 
+</div>
     <div class="wrapper">
       <!-- Sidebar  -->
       <nav id="sidebar">
-        <a href="#"> </a>
+        <a href="#"><img src="{% static 'images/image1.png' %}" alt="Logo" width="250" style="background-color: aliceblue; border-radius: 0px 0px 100px 100px;"></a>
         <ul class="list-unstyled components" class="menulink">
+         
           <li>
             <a href="{% url 'inicio' %}" class="menulink"
-              ><i class="fa fa-home fa-fw"></i> Inicio</a
+              ><i class="fa fa-home fa-fw"></i>Inicio</a
             >
           </li>
           <li>
@@ -56,6 +59,17 @@
               ><i class="fa fa-people-carry fa-fw"></i> Funcionários</a
             >
           </li>
+          <li>
+            <a href="{% url 'listar_categorias' %}" class="menulink"
+              ><i class="fa fa-tags fa-fw"></i> Categorias de Produtos</a
+            >
+          </li>
+          <li>
+            <a href="{% url 'listar_produtos' %}" class="menulink"
+              ><i class="fa fa-boxes fa-fw"></i> Produtos</a
+            >
+          </li>
+            
 
           <!-- Adicione mais links conforme necessário -->
         </ul>

@@ -1,6 +1,6 @@
 {% extends 'base.html' %} {% load static %}   
 {% block content %}
-    <h1>Almoxerifado</h1>
+    <h1>Funcionário</h1>
     <div>
         <form method="get">
   <div class="row mb-4">
@@ -10,8 +10,8 @@
         name="q"
         class="form-control"
         placeholder="Pesquisar Funcionário"
-        value="{{ request.GET.q }}"
-      />
+        value="{{ request.GET.q  }}" 
+      /> <!--valor que eu mando para o banco de dados> -->
     </div>
     <div class="col-lg-2 mb-3">
       <button type="submit" class="btn btn-primary colorprimarybtn">

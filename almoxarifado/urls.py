@@ -1,7 +1,5 @@
 from django.urls import path
 from . import views
-from django.contrib.auth.views import LoginView
-
 
 urlpatterns = [
     
@@ -24,6 +22,20 @@ urlpatterns = [
 # tela de login
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
+    
+    
+# Categoria URLs
+    path('categoria/', views.listar_categorias, name='listar_categorias'),
+    path('adcionar/categoria/', views.add_categoria, name='add_categoria'),
+    path('categoria/<int:categoria_id>/produtos/', views.categoria_produto, name='categoria_produto'),
+    path('excluir-categoria/<int:pk>/', views.excluir_categoria, name='excluir-categoria'),
+    path('editar-categoria/<int:pk>/', views.editar_categoria, name='editar-categoria'),
+    
+    
+# Produtos
+    path('produtos/', views.listar_produtos, name='listar_produtos'),
+    path('adicionar/produto/', views.add_produtos, name='add_produto'),
+    path('excluir-produtos/<int:pk>/', views.excluir_produto, name="excluir-produto"),
+    path('editar-produto/<int:pk>/', views.editar_produto, name="editar-produto")
 
- 
 ]

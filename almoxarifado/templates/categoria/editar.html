@@ -1,0 +1,34 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <h1 class="mb-4">Adicionar Categoria</h1>
+      <div class="card w-50">
+          <form method="POST" id="formCategoria">
+            {% csrf_token %}
+            <div class="p-3">
+              <div class="mb-3">
+                <label for="nome" class="form-label">Nome</label>
+                <input
+                  type="text"
+                  id="nome"
+                  name="nome"
+                  class="form-control"
+                  value="{{ categoria.nome }}"
+                  required/>
+              </div>
+                  <button class="btn btn-primary" type="submit">Salvar</button>
+                  <a
+                    href="{% url 'listar_produtos' %}"
+                    class="btn btn-secondary">Cancelar</a>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

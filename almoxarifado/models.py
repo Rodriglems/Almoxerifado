@@ -26,3 +26,24 @@ class Funcionario(models.Model):
 
     def __str__(self):
          return self.nome
+     
+     
+class CategoriaProduto(models.Model):
+    produtos = models.ManyToManyField('Produto', related_name='categorias', blank=True)
+    nome = models.CharField(max_length=100, unique=True)
+    descricao = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.nome
+
+
+class Produto(models.Model):
+    nome = models.CharField(max_length=100)
+    descricao = models.TextField(blank=True)
+    quantidade_estoque = models.PositiveIntegerField(default=0)
+    entrada_estoque = models.DateField(auto_now_add=True)
+    saida_estoque = models.DateField(null=True, blank=True)
+    categoria = models.ForeignKey(CategoriaProduto, on_delete=models.SET_NULL, null=True, blank=True)
+
+    def __str__(self):
+        return self.nome

@@ -1,0 +1,66 @@
+{% extends 'base.html' %} {% load static %}   
+{% block content %}
+    <h1>
+        Produtos da categoria: {{ categoria.nome }}
+    </h1>
+    <div>
+        <form method="get">
+  <div class="row mb-4">
+    <div class="col-md-6 mb-2">
+      <input
+        type="text"
+        name="q"
+        class="form-control"
+        placeholder="Pesquisar Produtos"
+        value="{{ request.GET.q  }}" 
+      /> <!--valor que eu mando para o banco de dados> -->
+    </div>
+    <div class="col-lg-2 mb-3">
+      <button type="submit" class="btn btn-primary colorprimarybtn">
+        Pesquisar
+      </button>
+    </div>
+    <div class="col-lg-3 mb-3">
+      <a href="{% url 'add_produto' %}" class="btn btn-primary colorprimarybtn"> Cadastrar Novo Produto </a>
+    </div>
+  </div>
+    <div class="col-lg-2 mb-2">
+      <a href="#" class="btn btn-primary colorprimarybtn" >Baixar PDF</a>
+    </div>
+</form>
+               <table class="table table-striped" style="width:100%;">
+                <thead >
+                  <tr>
+                    <th>Nome</th>
+                    <th>Descrição</th>
+                    <th>Quantidade</th>
+                    <th>Categoria</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for produto in produtos %}
+                  <tr>
+                    <td>{{ produto.nome }}</td>
+                    <td>{{ produto.descricao|default:"Sem descrição" }}</td>
+                    <td>{{ produto.quantidade_estoque|default:0 }}</td>
+                    <td>{{ produto.categoria.nome }}</td>
+                    <td>
+                      <a href="#" class="btn btn-sm btn-warning">Editar</a>
+                      <a href="#" class="btn btn-sm btn-danger">Excluir</a>
+                    </td>
+                  </tr>
+                  {% empty %} <!-- Isso é caso nenhum produto for encontrado -->
+                  <tr>
+                    <td colspan="5" class="text-center">
+                      Nenhum produto encontrado nesta categoria
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+          </div>
+        </div>
+    </div>
+    <!-- Exclusão agora é feita via POST, sem JS -->
+{% endblock content %}

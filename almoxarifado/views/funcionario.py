@@ -38,17 +38,22 @@ def add_funcionario(request):
         email = request.POST.get('email')
         telefone = request.POST.get('telefone')
         instituicao_id = request.POST.get('instituicao')
+        senha = request.POST.get('senha')
 
         try:
-            instituicao = get_object_or_404(Instituicao, id=instituicao_id)
-            Funcionario.objects.create(
-                nome=nome,
-                data_nascimento=data_nascimento,
-                email=email,
-                telefone=telefone,
-                instituicao=instituicao,
-                user=request.user  # atribui o usuário logado
-            )
+            with transaction.atomic():
+                instituicao = get_object_or_404(Instituicao, id=instituicao_id)
+                user = User.objects.create_user(username=email, email=email, password=senha)
+                
+
+                Funcionario.objects.create(
+                    nome=nome,
+                    data_nascimento=data_nascimento,
+                    email=email,
+                    telefone=telefone,
+                    instituicao=instituicao,
+                    user=user  # atribui o usuário logado
+                )
             return redirect('lista_funcionario')
         except Exception as e:
             instituicoes = Instituicao.objects.all()
