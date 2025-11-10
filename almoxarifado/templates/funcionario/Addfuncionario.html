@@ -1,87 +1,75 @@
 {% extends 'base.html' %} {% load static %} {% block content %}
-<div>
-  <div>
-    <div></div>
-    <div>
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <h1 class="mb-4">
+        {% if funcionario %}
+        Editar Funcionário
+        {% else %}
+        Adicionar Funcionário
+        {% endif %}
+      </h1>
       <form method="POST">
-        {% csrf_token %} {% if error %}
+        {% csrf_token %}
+        {% if error %}
         <div class="alert alert-danger">{{ error }}</div>
+        {% endif %}
+        {% if erros %}
+        {% for campo, mensagem in erros.items %}
+        <div class="alert alert-danger">{{ mensagem }}</div>
+        {% endfor %}
         {% endif %}
         <div class="mb-3">
           <label for="nome" class="form-label">Nome</label>
-          <input
-            type="text"
-            id="nome"
-            name="nome"
-            class="form-control"
-            required
-          />
+          <input type="text" id="nome" name="nome" class="form-control"
+            value="{% if funcionario %}{{ funcionario.nome }}{% else %}{{ val.nome|default:'' }}{% endif %}" required />
         </div>
         <div class="mb-3">
-          <label for="data_nascimento" class="form-label"
-            >Data de Nascimento</label
-          >
-          <input
-            type="date"
-            id="data_nascimento"
-            name="data_nascimento"
-            class="form-control"
-            required
-          />
+          <label for="data_nascimento" class="form-label">Data de Nascimento</label>
+          <input type="date" id="data_nascimento" name="data_nascimento" class="form-control"
+            value="{% if funcionario %}{{ funcionario.data_nascimento|date:'Y-m-d' }}{% else %}{{ val.data_nascimento|default:'' }}{% endif %}"
+            required />
         </div>
         <div class="mb-3">
           <label for="email" class="form-label">Email</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            class="form-control"
-            required
-          />
+          <input type="email" id="email" name="email" class="form-control"
+            value="{% if funcionario %}{{ funcionario.email }}{% else %}{{ val.email|default:'' }}{% endif %}"
+            required />
         </div>
         <div class="mb-3">
           <label for="telefone" class="form-label">Telefone</label>
-          <input
-            type="text"
-            id="telefone"
-            name="telefone"
-            class="form-control"
-            required
-          />
+          <input type="text" id="telefone" name="telefone" class="form-control"
+            value="{% if funcionario %}{{ funcionario.telefone }}{% else %}{{ val.telefone|default:'' }}{% endif %}"
+            required />
         </div>
         <div class="mb-3">
           <label for="instituicao" class="form-label">Instituição</label>
-          <select
-            id="instituicao"
-            name="instituicao"
-            class="form-control"
-            required
-          >
+          <select id="instituicao" name="instituicao" class="form-control" required>
             <option value="">Selecione uma instituição</option>
             {% for inst in instituicoes %}
-            <option value="{{ inst.id }}">{{ inst.nome }}</option>
+            <option value="{{ inst.id }}" {% if funcionario and funcionario.instituicao and
+              funcionario.instituicao.pk==inst.id %}selected{% endif %}>
+              {{ inst.nome }}
+            </option>
             {% endfor %}
           </select>
         </div>
+        {% if not funcionario %}
         <div class="mb-3">
           <label for="senha" class="form-label">Senha</label>
-          <input
-            type="password"
-            id="senha"
-            name="senha"
-            class="form-control"
-            required
-          />
+          <input type="password" id="senha" name="senha" class="form-control" required />
         </div>
+        {% endif %}
         <button type="submit" class="btn btn-primary">
+          {% if funcionario %}
+          Salvar Alterações
+          {% else %}
           Adicionar Funcionário
+          {% endif %}
         </button>
-        <a href="{% url 'lista_funcionario' %}" class="btn btn-secondary ml-2"
-          >Cancelar</a
-        >
+        <a href="{% url 'lista_funcionario' %}" class="btn btn-secondary ml-2">Cancelar</a>
       </form>
     </div>
   </div>
 </div>
-<!-- Exclusão agora é feita via POST, sem JS -->
 {% endblock content %}

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 
 
 class Instituicao(models.Model):
@@ -47,3 +48,15 @@ class Produto(models.Model):
 
     def __str__(self):
         return self.nome
+
+
+class SaidaProduto(models.Model):
+    produto = models.ForeignKey(Produto, on_delete=models.CASCADE, related_name='saidas')
+    quantidade = models.PositiveIntegerField()
+    data_saida = models.DateTimeField(auto_now_add=True)
+    usuario = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    destino = models.CharField(max_length=200, blank=True)
+    observacao = models.TextField(blank=True)
+
+    def __str__(self):
+        return f'{self.quantidade} x {self.produto.nome} em {self.data_saida.strftime("%Y-%m-%d %H:%M")}'

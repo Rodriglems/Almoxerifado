@@ -1,0 +1,63 @@
+{% extends 'base.html' %} {% load static %}
+{% block content %}
+
+{% if messages %}
+<div class="container mt-3">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+<h1>Registrar Saída de Produtos</h1>
+<div>
+    <form method="POST" style="margin: auto;">
+        <div class="row mb-4">
+            <div class="col-lg-2 mb-2">
+                <a href="{% url 'listar_saidas' %}" class="btn btn-primary colorprimarybtn">Saída de produtos</a>
+            </div>
+        </div>
+        <form method="POST" id="formCategoria">
+            {% csrf_token %}
+            <div class="p-3 col-md-6">
+                <div class="mb-3">
+                    <label for="produto" class="form-label">Produto</label>
+                    <select name="produto" id="produto" class="form-select">
+                        {% for produto in produtos %}
+                        <option value="{{ produto.id }}">{{ produto.nome }}
+                            {% if produto.quantidade_estoque > 0 %}
+                            (estoque: {{ produto.quantidade_estoque }})
+                            {% else %}
+                            <div style="color: red;">(sem estoque)</div>
+                            {% endif %}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="quantidade" class="form-label">Quantidade</label>
+                    <input type="number" min="1" name="quantidade" id="quantidade" class="form-control" required>
+                    {% if except %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ except }}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="mb-3">
+                    <label for="destino" class="form-label">Destino</label>
+                    <input type="text" name="destino" id="destino" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="observacao" class="form-label">Observação</label>
+                    <textarea name="observacao" id="observacao" class="form-control"></textarea>
+                </div>
+                <button class="btn btn-primary" type="submit">Registrar Saída</button>
+                <a href="{% url 'listar_produtos' %}" class="btn btn-secondary">Cancelar</a>
+            </div>
+
+
+        </form>
+</div>
+<!-- Exclusão agora é feita via POST, sem JS -->
+{% endblock content %}

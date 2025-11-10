@@ -8,6 +8,7 @@ from django.template.loader import get_template
 from xhtml2pdf import pisa
 from django.contrib.auth.decorators import login_required
 
+@login_required
 def listar_categorias(request):
     q = request.GET.get('q', '').strip()
     categorias = CategoriaProduto.objects.all()
@@ -19,7 +20,7 @@ def listar_categorias(request):
     page_obj = paginator.get_page(page_number)
     return render(request, 'categoria/lista.html', {'categorias': page_obj, 'page_obj': page_obj})  
 
-
+@login_required
 def add_categoria(request):
     if request.method == 'POST':
         nome = request.POST.get('nome')   
@@ -29,7 +30,7 @@ def add_categoria(request):
     # GET -> renderiza o formulário de adicionar
     return render(request, 'categoria/adcionar.html')  # novo template só com o form
 
-
+@login_required
 def categoria_produto(request, categoria_id):
      # Busca a categoria específica ou retorna 404 se não existir
      categoria = get_object_or_404(CategoriaProduto, id=categoria_id)
@@ -51,14 +52,14 @@ def categoria_produto(request, categoria_id):
          'categoria': categoria
      })
      
-
+@login_required
 def excluir_categoria(request, pk):
     categoria = get_object_or_404(CategoriaProduto, pk=pk)
     nome_categoria = categoria.nome 
     categoria.delete()
     messages.success(request, f'Categoria "{nome_categoria}" excluída com sucesso!')
     return redirect('listar_categorias')
-
+@login_required
 def editar_categoria(request, pk):
     categoria = get_object_or_404(CategoriaProduto, pk=pk)
     

@@ -1,73 +1,71 @@
-{% extends 'base.html' %} {% load static %}   
+{% extends 'base.html' %} {% load static %}
 {% block content %}
-    <h1>Funcionário</h1>
-    <div>
-        <form method="get">
-  <div class="row mb-4">
-    <div class="col-md-6 mb-2">
-      <input
-        type="text"
-        name="q"
-        class="form-control"
-        placeholder="Pesquisar Funcionário"
-        value="{{ request.GET.q  }}" 
-      /> <!--valor que eu mando para o banco de dados> -->
-    </div>
-    <div class="col-lg-2 mb-3">
-      <button type="submit" class="btn btn-primary colorprimarybtn">
-        Pesquisar
-      </button>
-    </div>
-    <div class="col-lg-3 mb-3">
-      <a
-        href="{% url 'add_funcionario' %}"
-        class="btn btn-primary colorprimarybtn"
-        >Cadastrar Novo Funcionário</a
-      >
-    </div>
-    <div class="col-lg-2 mb-2">
-      <a href="{% url 'pdf-funcionario' %}" class="btn btn-primary colorprimarybtn"
-        >Baixar PDF</a
-      >
-    </div>
+{% if messages %}
+<div class="container mt-3">
+  {% for message in messages %}
+  <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+    {{ message }}
   </div>
-</form>
-
-              <table class="table table-striped">
-                <thead >
-                  <tr>
-                    <th>Nome</th>
-                    <th>Data de Nascimento</th>
-                    <th>Email</th>
-                    <th>Telefone</th>
-                    <th>Instituição</th>
-                    <th>Ações</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for funcionario in funcionarios %}
-                  <tr>
-                    <td>{{ funcionario.nome }}</td>
-                    <td>{{ funcionario.data_nascimento }}</td>
-                    <td>{{ funcionario.email}}</td>
-                    <td>{{ funcionario.telefone }}</td>
-                    <td>{{ funcionario.instituicao }}</td>
-                    <td>
-                      <a href="{% url 'editar_funcionario' funcionario.id %}" class="btn btn-sm btn-warning">Editar</a>
-                      <a href="{% url 'excluir_funcionario' funcionario.id %}" class="btn btn-sm btn-danger">Excluir</a>
-                    </td>
-                  </tr>
-                  {% empty %} <!-- Isso é caso nenhum funcionario for encontrado -->
-                  <tr>
-                    <td colspan="6" class="text-center">
-                      Nenhum funcionário cadastrado
-                    </td>
-                  </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-          </div>
-        </div>
+  {% endfor %}
+</div>
+<h1>Funcionário</h1>
+<div>
+  <form method="get">
+    <div class="row mb-4">
+      <div class="col-md-6 mb-2">
+        <input type="text" name="q" class="form-control" placeholder="Pesquisar Funcionário"
+          value="{{ request.GET.q  }}" /> <!--valor que eu mando para o banco de dados> -->
+      </div>
+      <div class="col-lg-2 mb-3">
+        <button type="submit" class="btn btn-primary colorprimarybtn">
+          Pesquisar
+        </button>
+      </div>
+      <div class="col-lg-3 mb-3">
+        <a href="{% url 'add_funcionario' %}" class="btn btn-primary colorprimarybtn">Cadastrar Novo Funcionário</a>
+      </div>
+      <div class="col-lg-2 mb-2">
+        <a href="{% url 'pdf-funcionario' %}" class="btn btn-primary colorprimarybtn">Baixar PDF</a>
+      </div>
     </div>
-    <!-- Exclusão agora é feita via POST, sem JS -->
+  </form>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Data de Nascimento</th>
+        <th>Email</th>
+        <th>Telefone</th>
+        <th>Instituição</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for funcionario in funcionarios %}
+      <tr>
+        <td>{{ funcionario.nome }}</td>
+        <td>{{ funcionario.data_nascimento }}</td>
+        <td>{{ funcionario.email}}</td>
+        <td>{{ funcionario.telefone }}</td>
+        <td>{{ funcionario.instituicao }}</td>
+        <td>
+          <a href="{% url 'editar_funcionario' funcionario.id %}" class="btn btn-sm btn-warning">Editar</a>
+          <a href="{% url 'excluir_funcionario' funcionario.id %}" class="btn btn-sm btn-danger"
+            onclick="return confirm('Você tem certeza que deseja excluir o funcionario {{ funcionario.nome }}?')">Excluir</a>
+        </td>
+      </tr>
+      {% empty %} <!-- Isso é caso nenhum funcionario for encontrado -->
+      <tr>
+        <td colspan="6" class="text-center">
+          Nenhum funcionário cadastrado
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+</div>
+</div>
+<!-- Exclusão agora é feita via POST, sem JS -->
 {% endblock content %}

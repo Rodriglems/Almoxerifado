@@ -61,6 +61,9 @@ __all__ = [
     'excluir_produto',
     'editar_produto',
     'pdf_produtos',
+    #saida de produtos
+    'listar_saidas',
+    'registrar_saida',
     
 ]
 
@@ -73,4 +76,4 @@ from .categoria import listar_categorias, add_categoria, categoria_produto, excl
 # from .instituicao import pdf_instituicao, add_instituicao
 # from .funcionario import lista_funcionario
 
-from .produtos import listar_produtos, add_produtos, excluir_produto, editar_produto, pdf_produtos
+from .produtos import listar_produtos, add_produtos, excluir_produto, editar_produto, pdf_produtos, listar_saidas, registrar_saida

@@ -4,16 +4,13 @@ from django.shortcuts import get_object_or_404
 from django.template.loader import get_template
 from django.http import HttpResponse
 from xhtml2pdf import pisa
-from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.db import IntegrityError, transaction
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.cache import never_cache
+
 from django.core.paginator import Paginator
 from django.db.models import Q
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.forms import UserCreationForm
-
+from django.contrib import messages
 
 
 @login_required
@@ -67,10 +64,12 @@ def add_funcionario(request):
 
 @login_required
 def inicio_projeto(request):
-    return render(request, 'funcionario/inicio.html')
+    return render(request, 'inicio.html')
 
 @login_required
 def editar_funcionario(request, pk):
+    funcionario = get_object_or_404(Funcionario, pk=pk)
+    
     if request.method == 'POST':
         nome = request.POST.get('nome', '').strip()
         data_nascimento = request.POST.get('data_nascimento', '').strip()
@@ -83,60 +82,80 @@ def editar_funcionario(request, pk):
             erros['nome'] = 'Nome obrigatório.'
         if not email:
             erros['email'] = 'Email obrigatório.'
-        # outros validados rápidos...
 
         if erros:
-            return render(request, 'funcionario/Addfuncionario.html', {'erros': erros, 'val': request.POST, 'instituicoes': Instituicao.objects.all()})
+            return render(request, 'funcionario/Addfuncionario.html', {
+                'erros': erros, 
+                'val': request.POST, 
+                'instituicoes': Instituicao.objects.all(),
+                'funcionario': funcionario
+            })
 
         try:
             with transaction.atomic():
-                # tenta achar/usar usuário pelo email (ou criar)
-                user, created = User.objects.get_or_create(username=email, defaults={'email': email})
-                # evita associar user que já tem funcionário
-                from almoxarifado.models import Funcionario
-                if hasattr(user, 'funcionario') and not created:
-                    erros['email'] = 'Já existe um funcionário associado a este usuário/email.'
-                    return render(request, 'funcionario/Addfuncionario.html', {'erros': erros, 'val': request.POST, 'instituicoes': Instituicao.objects.all()})
-
-                # cria Funcionario apontando para user
-                instituicao = None
+                # Atualiza campos do funcionário existente
+                funcionario.nome = nome
+                funcionario.data_nascimento = data_nascimento or None
+                funcionario.email = email
+                funcionario.telefone = telefone
+                
                 if instituicao_id:
-                    from almoxarifado.models import Instituicao
-                    instituicao = Instituicao.objects.filter(pk=instituicao_id).first()
-            # cria Funcionario apontando para user
-                instituicao = None
-                if instituicao_id:
-                    from almoxarifado.models import Instituicao
-                    instituicao = Instituicao.objects.filter(pk=instituicao_id).first()
-
-                funcionario = Funcionario.objects.create(
-                    user=user,
-                    nome=nome,
-                    data_nascimento=data_nascimento or None,
-                    email=email,
-                    telefone=telefone,
-                    instituicao=instituicao
-                )
-                # se quiser, marque senha inválida (sem login) até criar fluxo de senha
-                user.set_unusable_password()
-                user.save()
-
+                    funcionario.instituicao = get_object_or_404(Instituicao, pk=instituicao_id)
+                else:
+                    funcionario.instituicao = None
+                
+                # Atualiza o usuário associado se existir
+                if funcionario.user:
+                    funcionario.user.username = email
+                    funcionario.user.email = email
+                    funcionario.user.save()
+                
+                funcionario.save()
+                
+            messages.success(request, 'Funcionário editado com sucesso!')    
             return redirect('lista_funcionario')
         except IntegrityError as e:
-            erros['__all__'] = 'Erro ao cadastrar funcionário: dado duplicado.'
-            return render(request, 'funcionario/Addfuncionario.html', {'erros': erros, 'val': request.POST, 'instituicoes': Instituicao.objects.all()})
+            erros['__all__'] = 'Erro ao editar funcionário: dado duplicado.'
+            return render(request, 'funcionario/Addfuncionario.html', {
+                'erros': erros, 
+                'val': request.POST, 
+                'instituicoes': Instituicao.objects.all(),
+                'funcionario': funcionario
+            })
         except Exception as e:
-            return render(request, 'funcionario/Addfuncionario.html', {'error': str(e), 'val': request.POST, 'instituicoes': Instituicao.objects.all()})
+            return render(request, 'funcionario/Addfuncionario.html', {
+                'error': str(e), 
+                'val': request.POST, 
+                'instituicoes': Instituicao.objects.all(),
+                'funcionario': funcionario
+            })
 
-    return render(request, 'funcionario/Addfuncionario.html', {'instituicoes': Instituicao.objects.all()})
+    # GET: preenche formulário com dados atuais
+    val = {
+        'nome': funcionario.nome,
+        'data_nascimento': funcionario.data_nascimento,
+        'email': funcionario.email,
+        'telefone': funcionario.telefone,
+        'instituicao': funcionario.instituicao.pk if funcionario.instituicao else ''
+    }
+    return render(request, 'funcionario/Addfuncionario.html', {
+        'instituicoes': Instituicao.objects.all(),
+        'funcionario': funcionario,
+        'val': val
+    })
 
 @login_required
 def excluir_funcionario(request, pk):
     funcionario = get_object_or_404(Funcionario, pk=pk)
+    
     if request.method == 'POST':
+        nome_funcionario = funcionario.nome  # Salva o nome antes de excluir
         funcionario.delete()
+        messages.success(request, f'Funcionário "{nome_funcionario}" excluído com sucesso!')
         return redirect('lista_funcionario')
-    return render(request, 'funcionario/confirmar_exclusao.html', {'funcionario': funcionario})
+    
+    # GET: mostra página de confirmação
+    return render(request, 'funcionario/lista.html', {'funcionario': funcionario})
 
 @login_required
 def pdf_funcionario(request):

@@ -69,6 +69,7 @@ def add_instituicao(request):
         return redirect('lista_instituicao')
     return render(request, 'instituicao/Addinstituicao.html')
 
+@login_required
 def pdf_instituicao(request):
     instituicoes = Instituicao.objects.all()
     template_path = 'instituicao/pdf.html'
@@ -82,7 +83,7 @@ def pdf_instituicao(request):
         return HttpResponse('Erro ao gerar o PDF', status=500)
     return response
 
-
+@login_required
 def excluir_instituicao(request, pk):
     instituicao = get_object_or_404(Instituicao, pk=pk)
     if request.method == 'POST':
@@ -91,7 +92,7 @@ def excluir_instituicao(request, pk):
     # se GET, renderiza uma confirmação simples
     return render(request, 'instituicao/confirm_delete.html', {'instituicao': instituicao})
 
-
+@login_required
 def editar_instituicao(request, pk):
     instituicao = get_object_or_404(Instituicao, pk=pk)
     if request.method == 'POST':

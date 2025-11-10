@@ -1,0 +1,64 @@
+{% extends 'base.html' %} {% load static %}
+{% block content %}
+
+{% if messages %}
+<div class="container mt-3">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+<h1>Produtos</h1>
+<div>
+    <form method="get">
+        <div class="row mb-4">
+            <div class="col-md-6 mb-2">
+                <input type="text" name="q" class="form-control" placeholder="Pesquisar produtos que sairam"
+                    value="{{ request.GET.q  }}" /> <!--valor que eu mando para o banco de dados> -->
+            </div>
+            <div class="col-lg-2 mb-3">
+                <button type="submit" class="btn btn-primary colorprimarybtn">
+                    Pesquisar
+                </button>
+            </div>
+            <div class="col-lg-2 mb-2">
+                <a href="{% url 'pdf_produtos' %}" class="btn btn-primary colorprimarybtn">Baixar PDF</a>
+            </div>
+        </div>
+    </form>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Quantidade</th>
+                <th>Categoria</th>
+                <th>Destino</th>
+                <th>Observação</th>
+                <th>Data de Saida</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for saida in saidas %}
+            <tr>
+                <td>{{ saida.produto.nome }}</td>
+                <td>{{ saida.quantidade|default:0 }}</td>
+                <td>{{ saida.produto.categoria.nome|default:"Sem categoria" }}</td>
+                <td>{{ saida.destino|default:"-" }}</td>
+                <td>{{ saida.observacao|default:"-" }}</td>
+                <td>{{ saida.data_saida|date:"d/m/Y H:i" }}</td>
+            </tr>
+            {% empty %} <!-- Isso é caso nenhum produto for encontrado -->
+            <tr>
+                <td colspan="6" class="text-center">
+                    Nenhuma saída de produto encontrada
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+</div>
+</div>
+{% endblock content %}

@@ -1,37 +1,34 @@
 {% extends 'base.html' %} {% load static %} {% block content %}
+{% if messages %}
+<div class="container mt-3">
+  {% for message in messages %}
+  <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+    {{ message }}
+  </div>
+  {% endfor %}
+</div>
 <h1>Instituições</h1>
 <div>
   <div>
     <form method="get">
-  <div class="row mb-4">
-    <div class="col-md-6 mb-2">
-      <input
-        type="text"
-        name="q"
-        class="form-control"
-        placeholder="Pesquisar por Instituição"
-        value="{{ request.GET.q }}"
-      />
-    </div>
-    <div class="col-lg-2 mb-3">
-      <button type="submit" class="btn btn-primary colorprimarybtn">
-        Pesquisar
-      </button>
-    </div>
-    <div class="col-lg-3 mb-3">
-      <a
-        href="{% url 'add_instituicao' %}"
-        class="btn btn-primary colorprimarybtn"
-        >Cadastrar Nova Instituição</a
-      >
-    </div>
-    <div class="col-lg-2 mb-2">
-      <a href="{% url 'pdf_instituicao' %}" class="btn btn-primary colorprimarybtn"
-        >Baixar PDF</a
-      >
-    </div>
-  </div>
-</form>
+      <div class="row mb-4">
+        <div class="col-md-6 mb-2">
+          <input type="text" name="q" class="form-control" placeholder="Pesquisar por Instituição"
+            value="{{ request.GET.q }}" />
+        </div>
+        <div class="col-lg-2 mb-3">
+          <button type="submit" class="btn btn-primary colorprimarybtn">
+            Pesquisar
+          </button>
+        </div>
+        <div class="col-lg-3 mb-3">
+          <a href="{% url 'add_instituicao' %}" class="btn btn-primary colorprimarybtn">Cadastrar Nova Instituição</a>
+        </div>
+        <div class="col-lg-2 mb-2">
+          <a href="{% url 'pdf_instituicao' %}" class="btn btn-primary colorprimarybtn">Baixar PDF</a>
+        </div>
+      </div>
+    </form>
     <div>
       <table class="table table-striped">
         <thead>
@@ -59,16 +56,9 @@
             <td>{{ instituicao.telefone }}</td>
             <td>{{ instituicao.cnpj }}</td>
             <td>
-              <a
-                href="{% url 'editar-instituicao' instituicao.pk %}"
-               class="btn btn-sm btn-warning"
-                >Editar</a
-              >
-              <a
-                href="{% url 'excluir-instituicao' instituicao.pk %}"
-                class="btn btn-sm btn-danger"
-                >Excluir</a
-              >
+              <a href="{% url 'editar-instituicao' instituicao.pk %}" class="btn btn-sm btn-warning">Editar</a>
+              <a href="{% url 'excluir-instituicao' instituicao.pk %}" class="btn btn-sm btn-danger"
+                onclick="return confirm('Você tem certeza que deseja excluir a instituicao {{ instituicao.nome }}?')">Excluir</a>
             </td>
           </tr>
           {% empty %}

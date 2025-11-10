@@ -40,5 +40,12 @@ urlpatterns = [
     path('editar-produto/<int:pk>/', views.editar_produto, name="editar-produto"),
     path('pdf-produtos/', views.pdf_produtos, name='pdf_produtos'),
     
+    
+# Saída de Produtos
+    
+    path('saida/produto/', views.registrar_saida, name='saida_produto'),
+    path('saida-produto/', views.listar_saidas, name='listar_saidas'),
+    
+    
 
 ]
