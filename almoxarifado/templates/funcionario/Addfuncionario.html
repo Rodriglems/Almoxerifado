@@ -14,50 +14,67 @@
         {% if error %}
         <div class="alert alert-danger">{{ error }}</div>
         {% endif %}
-        {% if erros %}
-        {% for campo, mensagem in erros.items %}
-        <div class="alert alert-danger">{{ mensagem }}</div>
-        {% endfor %}
-        {% endif %}
         <div class="mb-3">
           <label for="nome" class="form-label">Nome</label>
-          <input type="text" id="nome" name="nome" class="form-control"
+          <input type="text" id="nome" name="nome" class="form-control {% if erros.nome %}is-invalid{% endif %}"
             value="{% if funcionario %}{{ funcionario.nome }}{% else %}{{ val.nome|default:'' }}{% endif %}" required />
+          {% if erros.nome %}
+          <div class="invalid-feedback">{{ erros.nome }}</div>
+          {% endif %}
         </div>
         <div class="mb-3">
           <label for="data_nascimento" class="form-label">Data de Nascimento</label>
-          <input type="date" id="data_nascimento" name="data_nascimento" class="form-control"
+          <input type="date" id="data_nascimento" name="data_nascimento"
+            class="form-control {% if erros.data_nascimento %}is-invalid{% endif %}"
             value="{% if funcionario %}{{ funcionario.data_nascimento|date:'Y-m-d' }}{% else %}{{ val.data_nascimento|default:'' }}{% endif %}"
             required />
+          {% if erros.data_nascimento %}
+          <div class="invalid-feedback">{{ erros.data_nascimento }}</div>
+          {% endif %}
         </div>
         <div class="mb-3">
           <label for="email" class="form-label">Email</label>
-          <input type="email" id="email" name="email" class="form-control"
+          <input type="email" id="email" name="email" class="form-control {% if erros.email %}is-invalid{% endif %}"
             value="{% if funcionario %}{{ funcionario.email }}{% else %}{{ val.email|default:'' }}{% endif %}"
             required />
+          {% if erros.email %}
+          <div class="invalid-feedback">{{ erros.email }}</div>
+          {% endif %}
         </div>
         <div class="mb-3">
           <label for="telefone" class="form-label">Telefone</label>
-          <input type="text" id="telefone" name="telefone" class="form-control"
+          <input type="text" id="telefone" name="telefone"
+            class="form-control {% if erros.telefone %}is-invalid{% endif %}"
             value="{% if funcionario %}{{ funcionario.telefone }}{% else %}{{ val.telefone|default:'' }}{% endif %}"
             required />
+          {% if erros.telefone %}
+          <div class="invalid-feedback">{{ erros.telefone }}</div>
+          {% endif %}
         </div>
         <div class="mb-3">
           <label for="instituicao" class="form-label">Instituição</label>
-          <select id="instituicao" name="instituicao" class="form-control" required>
+          <select id="instituicao" name="instituicao"
+            class="form-control {% if erros.instituicao %}is-invalid{% endif %}" required>
             <option value="">Selecione uma instituição</option>
             {% for inst in instituicoes %}
-            <option value="{{ inst.id }}" {% if funcionario and funcionario.instituicao and
-              funcionario.instituicao.pk==inst.id %}selected{% endif %}>
+            <option value="{{ inst.id }}" {% if val and val.instituicao==inst.id|stringformat:"s" %}selected {% elif
+              funcionario and funcionario.instituicao and funcionario.instituicao.pk==inst.id %}selected {% endif %}>
               {{ inst.nome }}
             </option>
             {% endfor %}
           </select>
+          {% if erros.instituicao %}
+          <div class="invalid-feedback">{{ erros.instituicao }}</div>
+          {% endif %}
         </div>
         {% if not funcionario %}
         <div class="mb-3">
-          <label for="senha" class="form-label">Senha</label>
-          <input type="password" id="senha" name="senha" class="form-control" required />
+          <label for="senha" class="form-label">Senha (mínimo 6 caracteres)</label>
+          <input type="password" id="senha" name="senha" class="form-control {% if erros.senha %}is-invalid{% endif %}"
+            required minlength="6" />
+          {% if erros.senha %}
+          <div class="invalid-feedback">{{ erros.senha }}</div>
+          {% endif %}
         </div>
         {% endif %}
         <button type="submit" class="btn btn-primary">

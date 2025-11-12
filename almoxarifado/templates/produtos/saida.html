@@ -15,7 +15,7 @@
     <form method="POST" style="margin: auto;">
         <div class="row mb-4">
             <div class="col-lg-2 mb-2">
-                <a href="{% url 'listar_saidas' %}" class="btn btn-primary colorprimarybtn">Saída de produtos</a>
+                <a href="{% url 'listar_saidas' %}" class="btn btn-primary colorprimarybtn">Lista de Saída</a>
             </div>
         </div>
         <form method="POST" id="formCategoria">
@@ -23,7 +23,8 @@
             <div class="p-3 col-md-6">
                 <div class="mb-3">
                     <label for="produto" class="form-label">Produto</label>
-                    <select name="produto" id="produto" class="form-select">
+                    <select name="produto" id="produto"
+                        style="padding: 7px; border:none; border-radius: 5px; background-color: white;">
                         {% for produto in produtos %}
                         <option value="{{ produto.id }}">{{ produto.nome }}
                             {% if produto.quantidade_estoque > 0 %}

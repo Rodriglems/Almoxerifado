@@ -27,37 +27,41 @@
                 <a href="{% url 'pdf_produtos' %}" class="btn btn-primary colorprimarybtn">Baixar PDF</a>
             </div>
         </div>
-    </form>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Nome</th>
-                <th>Quantidade</th>
-                <th>Categoria</th>
-                <th>Destino</th>
-                <th>Observação</th>
-                <th>Data de Saida</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for saida in saidas %}
-            <tr>
-                <td>{{ saida.produto.nome }}</td>
-                <td>{{ saida.quantidade|default:0 }}</td>
-                <td>{{ saida.produto.categoria.nome|default:"Sem categoria" }}</td>
-                <td>{{ saida.destino|default:"-" }}</td>
-                <td>{{ saida.observacao|default:"-" }}</td>
-                <td>{{ saida.data_saida|date:"d/m/Y H:i" }}</td>
-            </tr>
-            {% empty %} <!-- Isso é caso nenhum produto for encontrado -->
-            <tr>
-                <td colspan="6" class="text-center">
-                    Nenhuma saída de produto encontrada
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+        <div class="col-lg-2 mb-3">
+            <a href="{% url 'saida_produto' %}" class="btn btn-primary colorprimarybtn">Adicionar Saída</a>
+        </div>
+</div>
+</form>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Quantidade</th>
+            <th>Categoria</th>
+            <th>Destino</th>
+            <th>Observação</th>
+            <th>Data de Saida</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for saida in saidas %}
+        <tr>
+            <td>{{ saida.produto.nome }}</td>
+            <td>{{ saida.quantidade|default:0 }}</td>
+            <td>{{ saida.produto.categoria.nome|default:"Sem categoria" }}</td>
+            <td>{{ saida.destino|default:"-" }}</td>
+            <td>{{ saida.observacao|default:"-" }}</td>
+            <td>{{ saida.data_saida|date:"d/m/Y H:i" }}</td>
+        </tr>
+        {% empty %} <!-- Isso é caso nenhum produto for encontrado -->
+        <tr>
+            <td colspan="6" class="text-center">
+                Nenhuma saída de produto encontrada
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 </div>
 </div>
 </div>

@@ -30,33 +30,72 @@ def lista_funcionario(request):
 @login_required
 def add_funcionario(request):
     if request.method == 'POST':
-        nome = request.POST.get('nome')
-        data_nascimento = request.POST.get('data_nascimento')
-        email = request.POST.get('email')
-        telefone = request.POST.get('telefone')
+        nome = request.POST.get('nome', '').strip()
+        data_nascimento = request.POST.get('data_nascimento', '').strip()
+        email = request.POST.get('email', '').strip()
+        telefone = request.POST.get('telefone', '').strip()
         instituicao_id = request.POST.get('instituicao')
-        senha = request.POST.get('senha')
+        senha = request.POST.get('senha', '').strip()
+
+        # Validação dos campos
+        erros = {}
+        if not nome:
+            erros['nome'] = 'Nome é obrigatório.'
+        if not data_nascimento:
+            erros['data_nascimento'] = 'Data de nascimento é obrigatória.'
+        if not email:
+            erros['email'] = 'Email é obrigatório.'
+        if not telefone:
+            erros['telefone'] = 'Telefone é obrigatório.'
+        if not instituicao_id:
+            erros['instituicao'] = 'Instituição é obrigatória.'
+        if not senha:
+            erros['senha'] = 'Senha é obrigatória.'
+        elif len(senha) < 6:
+            erros['senha'] = 'Senha deve ter no mínimo 6 caracteres.'
+        
+        # Verifica se o email já está em uso
+        if email and User.objects.filter(username=email).exists():
+            erros['email'] = 'Este email já está cadastrado.'
+        if email and Funcionario.objects.filter(email=email).exists():
+            erros['email'] = 'Este email já está cadastrado.'
+
+        if erros:
+            instituicoes = Instituicao.objects.all()
+            return render(request, 'funcionario/Addfuncionario.html', {
+                'instituicoes': instituicoes,
+                'erros': erros,
+                'val': request.POST
+            })
 
         try:
             with transaction.atomic():
                 instituicao = get_object_or_404(Instituicao, id=instituicao_id)
                 user = User.objects.create_user(username=email, email=email, password=senha)
                 
-
                 Funcionario.objects.create(
                     nome=nome,
                     data_nascimento=data_nascimento,
                     email=email,
                     telefone=telefone,
                     instituicao=instituicao,
-                    user=user  # atribui o usuário logado
+                    user=user
                 )
+            messages.success(request, 'Funcionário cadastrado com sucesso!')
             return redirect('lista_funcionario')
+        except IntegrityError as e:
+            instituicoes = Instituicao.objects.all()
+            return render(request, 'funcionario/Addfuncionario.html', {
+                'instituicoes': instituicoes,
+                'error': 'Erro: Email ou usuário já cadastrado.',
+                'val': request.POST
+            })
         except Exception as e:
             instituicoes = Instituicao.objects.all()
             return render(request, 'funcionario/Addfuncionario.html', {
                 'instituicoes': instituicoes,
-                'error': f'Erro ao cadastrar funcionário: {str(e)}'
+                'error': f'Erro ao cadastrar funcionário: {str(e)}',
+                'val': request.POST
             })
 
     instituicoes = Instituicao.objects.all()
