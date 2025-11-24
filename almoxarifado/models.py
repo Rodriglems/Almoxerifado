@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 
 
 class Instituicao(models.Model):
-    nome = models.CharField(max_length=100)
+    nome = models.CharField(max_length=100, db_index=True)  # Índice para busca
     cep = models.CharField(max_length=9)
     logradouro = models.CharField(max_length=200)
     numero = models.CharField(max_length=10)
@@ -17,9 +17,12 @@ class Instituicao(models.Model):
     def __str__(self):
         return self.nome
     
+    class Meta:
+        ordering = ['nome']  # Ordenação padrão
+    
 class Funcionario(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    nome = models.CharField(max_length=100)
+    nome = models.CharField(max_length=100, db_index=True)  # Índice para busca
     data_nascimento = models.DateField()
     email = models.EmailField(unique=True)
     telefone = models.CharField(max_length=20)
@@ -27,6 +30,9 @@ class Funcionario(models.Model):
 
     def __str__(self):
          return self.nome
+    
+    class Meta:
+        ordering = ['nome']  # Ordenação padrão
      
      
 class CategoriaProduto(models.Model):
@@ -39,7 +45,7 @@ class CategoriaProduto(models.Model):
 
 
 class Produto(models.Model):
-    nome = models.CharField(max_length=100)
+    nome = models.CharField(max_length=100, db_index=True)  # Índice para busca
     descricao = models.TextField(blank=True)
     quantidade_estoque = models.PositiveIntegerField(default=0)
     entrada_estoque = models.DateField(auto_now_add=True)
@@ -48,15 +54,24 @@ class Produto(models.Model):
 
     def __str__(self):
         return self.nome
+    
+    class Meta:
+        ordering = ['nome']  # Ordenação padrão
+        indexes = [
+            models.Index(fields=['categoria', 'nome']),  # Índice composto
+        ]
 
 
 class SaidaProduto(models.Model):
     produto = models.ForeignKey(Produto, on_delete=models.CASCADE, related_name='saidas')
     quantidade = models.PositiveIntegerField()
-    data_saida = models.DateTimeField(auto_now_add=True)
+    data_saida = models.DateTimeField(auto_now_add=True, db_index=True)  # Índice para ordenação
     usuario = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     destino = models.CharField(max_length=200, blank=True)
     observacao = models.TextField(blank=True)
 
     def __str__(self):
         return f'{self.quantidade} x {self.produto.nome} em {self.data_saida.strftime("%Y-%m-%d %H:%M")}'
+    
+    class Meta:
+        ordering = ['-data_saida']  # Ordenação padrão (mais recente primeiro)

@@ -7,6 +7,9 @@ from xhtml2pdf import pisa
 from django.contrib.auth.models import User
 from django.db import IntegrityError, transaction
 from django.contrib.auth.decorators import login_required
+from datetime import datetime
+from django.conf import settings
+import os
 
 from django.core.paginator import Paginator
 from django.db.models import Q
@@ -16,8 +19,8 @@ from django.contrib import messages
 @login_required
 def lista_funcionario(request):
     q = request.GET.get('q', '').strip()
-    # ordenar por nome para garantir resultados consistentes ao paginar
-    funcionarios = Funcionario.objects.all().order_by('nome')
+    # ordenar por nome para garantir resultados consistentes ao paginar (otimizado)
+    funcionarios = Funcionario.objects.select_related('instituicao', 'user').all().order_by('nome')
     if q:
         funcionarios = funcionarios.filter(Q(nome__icontains=q)).order_by('nome')
 
@@ -198,7 +201,7 @@ def excluir_funcionario(request, pk):
 
 @login_required
 def pdf_funcionario(request):
-    funcionarios = Funcionario.objects.all()
+    funcionarios = Funcionario.objects.select_related('instituicao').all()  # Otimizado
     template_path = 'funcionario/pdf.html'
     context = {'funcionarios': funcionarios}
     response = HttpResponse(content_type='application/pdf')

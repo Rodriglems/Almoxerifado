@@ -32,63 +32,87 @@ amarelo
 
 
 :root {
-    --colorbasic: #030303;
-    --colorbasic2: #000000;
-    --colortext: #FFF; 
-    --colortext-menu: #FFF; 
+    --colorbasic: #0b6ff0;
+    --colorbasic2: #0a58d6;
+    --colortext: #2c3e50; 
+    --colortext-menu: #5a6c7d;
+    --sidebar-bg: #ffffff;
+    --sidebar-hover: #f0f7ff;
+    --sidebar-active: #e3f2fd;
 }
 
 body {
-  
     font-family: 'Poppins', sans-serif;
-    background: #fafafa;
-    height: 100%;
+    background: #f5f7fa;
+    height: 100vh;
 }
 
 #sidebar {
-    min-width: 250px;
-    max-width: 250px;
-    min-height: 100vb;
-    background: var(--colorbasic);
+    min-width: 260px;
+    max-width: 260px;
+    min-height: 100vh;
+    background: linear-gradient(180deg, #ffffff, var(--colortext) );
     color: var(--colortext);
     transition: all 0.3s;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
 }
 
 #sidebar.active {
-    margin-left: -250px;
+    margin-left: -260px;
 }
 
 #sidebar .sidebar-header {
     padding: 20px;
-    background: var(--colorbasic);
+    background: var(--sidebar-bg);
 }
 
 #sidebar ul.components {
-    padding: 20px 0;
-    background-color: var(--colorbasic);
-    border-color: var(--colorbasic2) !important;
+    padding: 15px 0;
+
+    border-color: transparent !important;
 }
 
 #sidebar ul p {
-    color: #fff;
+    color: var(--colortext);
     padding: 10px;
+}
+
+#sidebar ul li {
+    margin: 4px 8px;
 }
 
 #sidebar ul li a {
-    padding: 10px;
+    padding: 12px 16px;
+    font-size: 0.95em;
+    display: flex;
+    align-items: center;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    color: var(--colortext);
+    font-weight: 500;
+}
+
+#sidebar ul li a i {
+    width: 24px;
+    margin-right: 12px;
     font-size: 1.1em;
-    display: block;
+    color: var(--colortext);
+}
+#sidebar ul li a i:hover {
+    color: var(--colortext);
 }
 
 #sidebar ul li a:hover {
-    color: var(--colorbasic2);
-    background: #fff;
+    color: var(--colorbasic);
+    background: var(--sidebar-hover);
+    transform: translateX(4px);
 }
 
 #sidebar ul li.active>a,
 a[aria-expanded="true"] {
-    color: #fff;
-    background: var(--colorbasic);
+    color: var(--colorbasic);
+    background: var(--sidebar-active);
+    font-weight: 600;
 }
 
 .espaco-menu{
@@ -103,49 +127,69 @@ a[aria-expanded="true"] {
 }
 
 .colorprimarybtn{
-    background-color: var(--colorbasic2);
-    border-color: var(--colorbasic2) !important;
-    color: var(--colortext);
+    background: linear-gradient(135deg, var(--colorbasic), var(--colorbasic2));
+    border-color: var(--colorbasic) !important;
+    color: #fff;
     margin-top: 5px;
     min-width: 100%;
+    border-radius: 8px;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(11, 111, 240, 0.2);
+    transition: all 0.3s ease;
 }
 
 .colorprimarybtn2{
-    background-color: var(--colorbasic2);
-    border-color: var(--colorbasic2) !important;
-    color: var(--colortext);
+    background: linear-gradient(135deg, var(--colorbasic), var(--colorbasic2));
+    border-color: var(--colorbasic) !important;
+    color: #fff;
     margin-top: 5px;
+    border-radius: 8px;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(11, 111, 240, 0.2);
+    transition: all 0.3s ease;
 }
 
 .color-menu{
-    background-color: #f4d85d; 
-    border-color: #f4d85d !important;
-    color: #000;
+    background: var(--colortext);
+    color: #fff !important;
     margin-top: 5px;
+    border-radius: 8px;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(11, 111, 240, 0.15);
+    transition: all 0.3s ease;
+}
+
+ .btn-color{
+    color: #fff;
+ }
+
+.color-menu:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(11, 111, 240, 0.25);
 }
 
 
 a.colorprimarybtn2:link, a.colorprimarybtn2:visited {
 	text-decoration: none;
-    color: var(--colortext);
+    color: #fff;
 }
 
 .colorprimarybtn2:hover {
-    background-color: var(--colorbasic);
-    border-color: var(--colorbasic) !important;
-    color: var(--colortext);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(11, 111, 240, 0.3);
+    color: #fff;
 }
 
 
 a.colorprimarybtn:link, a.colorprimarybtn:visited {
 	text-decoration: none;
-    color: var(--colortext);
+    color: #fff;
 }
 
 .colorprimarybtn:hover {
-    background-color: var(--colorbasic);
-    border-color: var(--colorbasic) !important;
-    color: var(--colortext);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(11, 111, 240, 0.3);
+    color: #fff;
 }
 
 .page-item.active.colorlinkprimary .page-link{
@@ -187,24 +231,28 @@ a:focus {
 
 a:link, a:visited {
 	text-decoration: none;
-    color: var(--colorbasic);
+    color: var(--colortext-menu);
 }
 
 a.menulink:link, a.menulink:visited{
     text-decoration: none;
-    color: var(--colortext-menu);
+    color: var(--colortext);
+}
+
+a.menulink:hover i {
+    transform: scale(1.1);
+    transition: transform 0.2s ease;
 }
 
 
-
-
 .navbar {
-    padding: 15px 10px;
+    padding: 15px 20px;
     background: #fff;
     border: none;
     border-radius: 0;
-    margin-bottom: 40px;
-    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    border-bottom: 2px solid #f0f0f0;
 }
 
 .navbar-btn {
@@ -227,15 +275,31 @@ a.menulink:link, a.menulink:visited{
 .wrapper {
     position:absolute;
     margin-top: 10px;
-    border-top: 5px solid;
-    border-bottom: 5px solid;
-    border-color: #f4d85d;
-   
+    border-top: 4px solid;
+    border-bottom: 4px solid;
+    border-color: var(--colortext);
     display: flex;
     width: 100%;
     align-items: stretch;
-    
+}
 
+/* Estilo para área da logo no sidebar */
+#sidebar > a {
+    display: block;
+    text-align: center;
+    padding: 20px 15px;
+    border-radius: 0 0 20px 20px;
+    margin-bottom: 10px;
+}
+
+#sidebar > a img {
+    max-width: 100%;
+    height: auto;
+    transition: transform 0.3s ease;
+}
+
+#sidebar > a:hover img {
+    transform: scale(1.02);
 }
 
 
@@ -277,32 +341,40 @@ a.download {
 }
 
 a.sairmenu {
-    background: var(--colorbasic2);
-    color: var(--colortext-menu);
+    background: linear-gradient(135deg, var(--colorbasic), var(--colorbasic2));
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(11, 111, 240, 0.2);
 }
 button.sairmenu{
-    background: var(--colorbasic2);
-    color: var(--colortext-menu);
+    background: linear-gradient(135deg, var(--colorbasic), var(--colorbasic2));
+    color: #fff;
     width: 100%;
+    box-shadow: 0 4px 12px rgba(11, 111, 240, 0.2);
 }
 
 .sairmenubtn{
     padding: 10px;
-    margin-bottom: 50px;
+    margin-bottom: 20px;
+    margin-top: auto;
 } 
 
 ul.sairmenubtn button {
     text-align: center;
     font-size: 0.9em !important;
     display: block;
-    border-radius: 20px;
+    border-radius: 10px;
+    border: none;
+    padding: 10px;
+    font-weight: 600;
 }
 
 ul.sairmenubtn a {
     text-align: center;
     font-size: 0.9em !important;
     display: block;
-    border-radius: 20px;
+    border-radius: 10px;
+    padding: 10px;
+    font-weight: 600;
 }
 
 a.article,
@@ -346,6 +418,66 @@ table.table td a.delete {
 }
 table.table td a.student {
     color: #1ba06d;
+}
+
+/* Força texto branco nos botões de ação */
+.btn-warning,
+.btn-warning:hover,
+.btn-warning:focus,
+.btn-warning:active {
+    color: #fff !important;
+}
+
+.btn-danger,
+.btn-danger:hover,
+.btn-danger:focus,
+.btn-danger:active {
+    color: #fff !important;
+}
+
+.btn-primary,
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+    color: #fff !important;
+}
+
+.btn-success,
+.btn-success:hover,
+.btn-success:focus,
+.btn-success:active {
+    color: #fff !important;
+}
+
+.btn-secondary,
+.btn-secondary:hover,
+.btn-secondary:focus,
+.btn-secondary:active {
+    color: #fff !important;
+}
+
+.btn-info,
+.btn-info:hover,
+.btn-info:focus,
+.btn-info:active {
+    color: #fff !important;
+}
+
+.btn-dark,
+.btn-dark:hover,
+.btn-dark:focus,
+.btn-dark:active {
+    color: #fff !important;
+}
+
+
+.sairmenubtn{
+    padding: 10px;
+    margin-bottom: 20px;
+    margin-top: auto;
+    position: absolute;
+    bottom: 0;
+    width: 15%;
 }
 
 /*tabela de notas*/
@@ -400,11 +532,13 @@ table.table td a.student {
 /* Firefox */
 input[type=number] {
     -moz-appearance: textfield;
+    appearance: textfield;
 }
   /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
+  appearance: none;
   margin: 0;
 }
 

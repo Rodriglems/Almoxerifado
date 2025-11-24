@@ -1,93 +1,205 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="pt-br">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Lista de Alunos</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        font-size: 12px;
-      }
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
-        table-layout: fixed;
-      }
-      th,
-      td {
-        border: 1px solid #ccc;
-        padding: 6px;
-        text-align: left;
-        /* ensure long strings (like CNPJ) wrap and don't break the table */
-        word-break: break-word;
-        overflow-wrap: anywhere;
-        white-space: normal;
-      }
-      th {
-        background: #f4f4f4;
-      }
-      h2 {
-        color: #007bff;
-      }
-    </style>
-  </head>
-  <body>
-    <h2>Lista das Instituições</h2>
-    {% if warning %}
-    <div
-      style="
-        color: #856404;
-        background: #fff3cd;
-        padding: 8px;
-        border-radius: 4px;
-      "
-    >
-      Aviso: {{ warning }}
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Lista de Instituições</title>
+  <style>
+    @page {
+      size: A4 landscape;
+      margin: 20mm;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 11px;
+      margin: 0;
+      padding: 0;
+    }
+
+    .header-title {
+      flex-grow: 1;
+      text-align: center;
+
+    }
+
+    .header-title img {
+      max-width: 150px;
+      height: auto;
+    }
+
+    h2 {
+      color: #212222;
+      margin-top: 2px;
+      font-size: 20px;
+    }
+
+    .warning {
+      color: #0b6ff0;
+      background: #fff3cd;
+      padding: 10px;
+      border-radius: 4px;
+      margin-bottom: 15px;
+      border-left: 4px solid #0b6ff0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    thead {
+      background: #0b6ff0;
+      color: rgb(31, 30, 30);
+    }
+
+    th {
+      padding: 10px 6px;
+      text-align: left;
+      font-weight: bold;
+      border: 2px solid #0b6ff0;
+      font-size: 10px;
+      word-wrap: break-word;
+    }
+
+    td {
+      border: 1px solid #ddd;
+      padding: 8px 6px;
+      text-align: left;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      vertical-align: top;
+    }
+
+    tbody tr:nth-child(even) {
+      background: #f9f9f9;
+    }
+
+    tbody tr:hover {
+      background: #f0f0f0;
+    }
+
+    /* Larguras específicas para cada coluna */
+    th:nth-child(1),
+    td:nth-child(1) {
+      width: 15%;
+    }
+
+    /* Nome */
+    th:nth-child(2),
+    td:nth-child(2) {
+      width: 9%;
+    }
+
+    /* CEP */
+    th:nth-child(3),
+    td:nth-child(3) {
+      width: 20%;
+    }
+
+    /* Logradouro */
+    th:nth-child(4),
+    td:nth-child(4) {
+      width: 6%;
+    }
+
+    /* Número */
+    th:nth-child(5),
+    td:nth-child(5) {
+      width: 15%;
+    }
+
+    /* Bairro */
+    th:nth-child(6),
+    td:nth-child(6) {
+      width: 8%;
+    }
+
+    /* Estado */
+    th:nth-child(7),
+    td:nth-child(7) {
+      width: 12%;
+    }
+
+    /* Telefone */
+    th:nth-child(8),
+    td:nth-child(8) {
+      width: 15%;
+    }
+
+    /* CNPJ */
+
+    .empty-message {
+      text-align: center;
+      padding: 30px;
+      color: #666;
+      font-style: italic;
+    }
+
+    .footer {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 9px;
+      color: #666;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="header-title">
+    <img src="{% static 'images/logo.png' %}" alt="Logo" width="120" />
+    <div>
+      <h2>Lista das Instituições</h2>
     </div>
-    {% endif %}
-    <table>
-      <thead>
-        <tr>
-          <th>Nome</th>
-          <th>CEP</th>
-          <th>Logradouro</th>
-          <th>Número</th>
-          <th>Bairro</th>
-          <th>Estado</th>
-          <th>Telefone</th>
-          <th>CNPJ</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for instituicao in instituicoes %}
-        <tr>
-          <td style="max-width: 160px">{{ instituicao.nome }}</td>
-          <td style="max-width: 90px">{{ instituicao.cep }}</td>
-          <td style="max-width: 160px">{{ instituicao.logradouro }}</td>
-          <td style="max-width: 60px">{{ instituicao.numero }}</td>
-          <td style="max-width: 120px">{{ instituicao.bairro }}</td>
-          <td style="max-width: 80px">{{ instituicao.estado }}</td>
-          <td style="max-width: 110px">{{ instituicao.telefone }}</td>
-          <td
-            style="
-              max-width: 140px;
-              word-break: break-all;
-              overflow-wrap: anywhere;
-            "
-          >
-            {{ instituicao.cnpj }}
-          </td>
-        </tr>
-        {% empty %}
-        <tr>
-          <td colspan="9" style="text-align: center">
-            Nenhuma instituição cadastrada
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </body>
+  </div>
+
+
+  {% if warning %}
+  <div class="warning">
+    <strong>Aviso:</strong> {{ warning }}
+  </div>
+  {% endif %}
+
+  <table>
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>CEP</th>
+        <th>Logradouro</th>
+        <th>Nº</th>
+        <th>Bairro</th>
+        <th>Estado</th>
+        <th>Telefone</th>
+        <th>CNPJ</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for instituicao in instituicoes %}
+      <tr>
+        <td>{{ instituicao.nome }}</td>
+        <td>{{ instituicao.cep }}</td>
+        <td>{{ instituicao.logradouro }}</td>
+        <td>{{ instituicao.numero }}</td>
+        <td>{{ instituicao.bairro }}</td>
+        <td>{{ instituicao.estado }}</td>
+        <td>{{ instituicao.telefone }}</td>
+        <td>{{ instituicao.cnpj }}</td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="8" class="empty-message">
+          Nenhuma instituição cadastrada
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="footer">
+    Gerado em {{ data_atual|default:"data não disponível" }} | Sistema de Almoxarifado
+  </div>
+</body>
+
 </html>

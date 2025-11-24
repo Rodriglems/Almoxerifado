@@ -7,6 +7,9 @@ from django.http import HttpResponse
 from django.template.loader import get_template
 from xhtml2pdf import pisa
 from django.contrib.auth.decorators import login_required
+from datetime import datetime
+from django.conf import settings
+import os
 
 @login_required
 def listar_categorias(request):
@@ -35,9 +38,9 @@ def categoria_produto(request, categoria_id):
      # Busca a categoria específica ou retorna 404 se não existir
      categoria = get_object_or_404(CategoriaProduto, id=categoria_id)
      
-     # Filtra apenas os produtos desta categoria
+     # Filtra apenas os produtos desta categoria (otimizado)
      q = request.GET.get('q', '').strip()
-     produtos = Produto.objects.filter(categoria=categoria)
+     produtos = Produto.objects.filter(categoria=categoria).select_related('categoria')
      
      if q:
         produtos = produtos.filter(Q(nome__icontains=q) | Q(descricao__icontains=q))
@@ -75,40 +78,59 @@ def editar_categoria(request, pk):
 
 @login_required
 def pdf_categoria(request, categoria_id):
-    import os
-    import base64
-    from django.conf import settings
-    
     # Busca a categoria específica
     categoria = get_object_or_404(CategoriaProduto, id=categoria_id)
     
-    # Filtra apenas os produtos desta categoria
-    produtos = Produto.objects.filter(categoria=categoria)
+    # Filtra apenas os produtos desta categoria (otimizado)
+    produtos = Produto.objects.filter(categoria=categoria).select_related('categoria')
     
     template_path = 'categoria/pdf.html'
     
-    # Converter imagem para base64 (mesmo código do pdf_produtos)
-    logo_base64 = None
-    logo_path = os.path.join(settings.BASE_DIR, 'static', 'images', 'image1.png')
-    
-    try:
-        if os.path.exists(logo_path):
-            with open(logo_path, 'rb') as image_file:
-                logo_base64 = base64.b64encode(image_file.read()).decode('utf-8')
-    except Exception as e:
-        print(f"Erro ao carregar imagem: {e}")
+    # Adiciona a data atual formatada
+    data_atual = datetime.now().strftime('%d/%m/%Y às %H:%M')
     
     context = {
         'produtos': produtos,
         'categoria': categoria,
-        'logo_base64': logo_base64
+        'data_atual': data_atual,
     }
     
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = f'attachment; filename="produtos_{categoria.nome}.pdf"'
     template = get_template(template_path)
     html = template.render(context)
-    pisa_status = pisa.CreatePDF(html, dest=response)
+    
+    # Função para resolver o caminho dos arquivos estáticos
+    def link_callback(uri, rel):
+        """
+        Converte URIs HTML para caminhos absolutos do sistema
+        """
+        sUrl = settings.STATIC_URL
+        sRoot = settings.STATIC_ROOT
+        mUrl = settings.MEDIA_URL
+        mRoot = settings.MEDIA_ROOT
+
+        if uri.startswith(mUrl):
+            path = os.path.join(mRoot, uri.replace(mUrl, ""))
+        elif uri.startswith(sUrl):
+            relative_path = uri.replace(sUrl, "")
+            if sRoot and os.path.exists(sRoot):
+                path = os.path.join(sRoot, relative_path)
+            else:
+                path = os.path.join(settings.BASE_DIR, 'static', relative_path)
+        else:
+            return uri
+
+        if not os.path.isfile(path):
+            fallback_path = os.path.join(settings.BASE_DIR, 'static', uri.lstrip('/').replace(sUrl.lstrip('/'), ''))
+            if os.path.isfile(fallback_path):
+                return fallback_path
+            raise Exception(f'Arquivo não encontrado: {path} (URI original: {uri})')
+        
+        return path
+    
+    pisa_status = pisa.CreatePDF(html, dest=response, link_callback=link_callback)
+    
     if pisa_status.err:
         return HttpResponse('Erro ao gerar o PDF', status=500)
     return response

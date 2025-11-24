@@ -30,8 +30,7 @@
   <div class="wrapper">
     <!-- Sidebar  -->
     <nav id="sidebar">
-      <a href="#"><img src="{% static 'images/image1.png' %}" alt="Logo" width="250"
-          style="background-color: aliceblue; border-radius: 0px 0px 100px 100px;"></a>
+      <a href="{% url 'inicio' %}"><img src="{% static 'images/logo.png' %}" alt="Logo" width="220"></a>
       <ul class="list-unstyled components" class="menulink">
 
         <li>
@@ -60,11 +59,7 @@
 
           <!-- Adicione mais links conforme necessário -->
       </ul>
-      <ul class="list-unstyled sairmenubtn color-principal-escura">
-        <li>
-          <!-- Logout link removido temporariamente - adicione quando necessário -->
-        </li>
-      </ul>
+
     </nav>
     <!-- Page Content  -->
     <div class="content container-fluid">

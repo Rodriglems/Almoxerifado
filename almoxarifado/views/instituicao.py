@@ -9,6 +9,9 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from xhtml2pdf import pisa  
 from django.template.loader import get_template
+from datetime import datetime
+from django.conf import settings
+import os
 
 
 @login_required
@@ -73,12 +76,56 @@ def add_instituicao(request):
 def pdf_instituicao(request):
     instituicoes = Instituicao.objects.all()
     template_path = 'instituicao/pdf.html'
-    context = {'instituicoes': instituicoes}
+    
+    # Adiciona a data atual formatada
+    data_atual = datetime.now().strftime('%d/%m/%Y às %H:%M')
+    
+    context = {
+        'instituicoes': instituicoes,
+        'data_atual': data_atual,
+    }
+    
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="instituicoes.pdf"'
+    response['Content-Disposition'] = 'attachment; filename="instituicoes.pdf"' # o attachment; para download
     template = get_template(template_path)
-    html = template.render(context)
-    pisa_status = pisa.CreatePDF(html, dest=response)
+    html = template.render(context) # converte o template para uma string HTML
+    
+    # Função para resolver o caminho dos arquivos estáticos
+    def link_callback(uri, rel):
+        """
+        Converte URIs HTML para caminhos absolutos do sistema
+        """
+        # Remove a barra inicial se existir
+        sUrl = settings.STATIC_URL
+        sRoot = settings.STATIC_ROOT
+        mUrl = settings.MEDIA_URL
+        mRoot = settings.MEDIA_ROOT
+
+        if uri.startswith(mUrl):
+            path = os.path.join(mRoot, uri.replace(mUrl, ""))
+        elif uri.startswith(sUrl):
+            # Remove o STATIC_URL e junta com o caminho da pasta static
+            relative_path = uri.replace(sUrl, "")
+            if sRoot and os.path.exists(sRoot):
+                path = os.path.join(sRoot, relative_path)
+            else:
+                # Usa BASE_DIR/static quando STATIC_ROOT não existe
+                path = os.path.join(settings.BASE_DIR, 'static', relative_path)
+        else:
+            return uri
+
+        # Verifica se o arquivo existe antes de retornar
+        if not os.path.isfile(path):
+            # Tenta buscar no diretório static do projeto como fallback
+            fallback_path = os.path.join(settings.BASE_DIR, 'static', uri.lstrip('/').replace(sUrl.lstrip('/'), ''))
+            if os.path.isfile(fallback_path):
+                return fallback_path
+            raise Exception(f'Arquivo não encontrado: {path} (URI original: {uri})')
+        
+        return path
+    
+    pisa_status = pisa.CreatePDF(html, dest=response, link_callback=link_callback)
+    
     if pisa_status.err:
         return HttpResponse('Erro ao gerar o PDF', status=500)
     return response

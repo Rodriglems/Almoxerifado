@@ -1,28 +1,147 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
-    <title>Lista de Alunos</title>
+    <title>Lista de Funcionários</title>
     <style>
-        body { font-family: Arial, sans-serif; font-size: 12px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; table-layout: fixed; }
-        th, td { border: 1px solid #ccc; padding: 6px; text-align: left; white-space: normal; word-break: break-all; overflow-wrap: anywhere; }
-        th { background: #f4f4f4; }
-        h2 { color: #007bff; }
-        tr{ word-break: break-word; }
-        /* define largura relativa das colunas para controlar o espaço do email */
-        th:nth-child(1), td:nth-child(1) { width: 30%; } /* nome */
-        th:nth-child(2), td:nth-child(2) { width: 15%; } /* data */
-        th:nth-child(3), td:nth-child(3) { width: 25%; /* email */ }
-        th:nth-child(4), td:nth-child(4) { width: 15%; } /* telefone */
-        th:nth-child(5), td:nth-child(5) { width: 15%; } /* instituicao */
-        /* classe específica para email (opcional) */
-        .email { white-space: normal; word-break: break-all; overflow-wrap: anywhere; }
+        @page {
+            size: A4 landscape;
+            margin: 20mm;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 11px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header-title {
+            flex-grow: 1;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header-title img {
+            max-width: 150px;
+            height: auto;
+        }
+
+        h2 {
+            color: #212222;
+            margin-top: 2px;
+            font-size: 20px;
+        }
+
+        .warning {
+            color: #0b6ff0;
+            background: #fff3cd;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            border-left: 4px solid #0b6ff0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        thead {
+            background: #0b6ff0;
+            color: rgb(31, 30, 30);
+        }
+
+        th {
+            padding: 10px 6px;
+            text-align: left;
+            font-weight: bold;
+            border: 2px solid #0b6ff0;
+            font-size: 10px;
+            word-wrap: break-word;
+        }
+
+        td {
+            border: 1px solid #ddd;
+            padding: 8px 6px;
+            text-align: left;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            vertical-align: top;
+        }
+
+        tbody tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        tbody tr:hover {
+            background: #f0f0f0;
+        }
+
+        /* Larguras específicas para cada coluna */
+        th:nth-child(1),
+        td:nth-child(1) {
+            width: 25%;
+        }
+
+        /* nome */
+        th:nth-child(2),
+        td:nth-child(2) {
+            width: 12%;
+        }
+
+        /* data */
+        th:nth-child(3),
+        td:nth-child(3) {
+            width: 25%;
+        }
+
+        /* email */
+        th:nth-child(4),
+        td:nth-child(4) {
+            width: 15%;
+        }
+
+        /* telefone */
+        th:nth-child(5),
+        td:nth-child(5) {
+            width: 23%;
+        }
+
+        /* instituicao */
+
+        .empty-message {
+            text-align: center;
+            padding: 30px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 9px;
+            color: #666;
+        }
+
+        .email {
+            white-space: normal;
+            word-break: break-all;
+            overflow-wrap: anywhere;
+        }
     </style>
 </head>
+
 <body>
-    <h2>Lista de Funcionarios</h2>
+    <div class="header-title">
+        <img src="{% static 'images/logo.png' %}" alt="Logo" width="120" />
+        <div>
+            <h2>Lista de Funcionários</h2>
+        </div>
+    </div>
     <table>
         <thead>
             <tr>
@@ -30,7 +149,7 @@
                 <th>Data de Nascimento</th>
                 <th>Email</th>
                 <th>Telefone</th>
-                <th>Instituição</th>                   
+                <th>Instituição</th>
             </tr>
         </thead>
         <tbody>
@@ -38,12 +157,23 @@
             <tr>
                 <td>{{ funcionario.nome }}</td>
                 <td>{{ funcionario.data_nascimento }}</td>
-                <td class="email">{{ funcionario.email }}</td>WW
+                <td class="email">{{ funcionario.email }}</td>
                 <td>{{ funcionario.telefone }}</td>
                 <td>{{ funcionario.instituicao }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" class="empty-message">
+                    Nenhum funcionário cadastrado
+                </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
+
+    <div class="footer">
+        Gerado em {{ data_atual|default:"data não disponível" }} | Sistema de Almoxarifado
+    </div>
 </body>
+
 </html>

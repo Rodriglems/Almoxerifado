@@ -24,9 +24,9 @@
                 <div class="mb-3">
                     <label for="produto" class="form-label">Produto</label>
                     <select name="produto" id="produto"
-                        style="padding: 7px; border:none; border-radius: 5px; background-color: white;">
+                        style="padding: 7px; border:none; border-radius: 5px; background-color: #f5f7fa;">
                         {% for produto in produtos %}
-                        <option value="{{ produto.id }}">{{ produto.nome }}
+                        <option class="form-control" value="{{ produto.id }}">{{ produto.nome }}
                             {% if produto.quantidade_estoque > 0 %}
                             (estoque: {{ produto.quantidade_estoque }})
                             {% else %}
